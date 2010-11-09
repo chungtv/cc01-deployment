@@ -1,13 +1,14 @@
 #labels Featured,Phase-Requirements,Phase-Design
-Subversion(viết  tắt  là SVN)  là một hệ  thống quản  lí version  (version  control
-system  -  VCS)  được  giới  thiệu  vào  năm  2000  bởi  công  ty  CollabNet
-(http://subversion.tigris.org). Đây  là  hệ  thống  hỗ  trợ  làm  việc  theo  nhóm  rất
+Subversion(SVN)là gì?
+Subversion(viết tắt là SVN) là một hệ thống quản lí version (version control
+system - VCS) được giới thiệu vào năm 2000 bởi công ty CollabNet
+(http://subversion.tigris.org). Đây là hệ thống hỗ trợ làm việc theo nhóm rất
 hiệu quả. Khi một nhóm làm việc cùng trên một project, việc nhiều người cùng
-chỉnh sửa nội dung của một  file  là điều không  thể  tránh khỏi. SVN cung cấp
+chỉnh sửa nội dung của một file là điều không thể tránh khỏi. SVN cung cấp
 các chức năng để có thể thực hiện việc này một cách đơn giản và an toàn. 
 Về mặt khái quát, SVN giống như một hệ thống file server mà các client có thể
-download và upload  file một cách bình  thường. Điểm đặt biệt của SVN  là nó
-lưu  lại  tất cả những gì  thay đổi  trên hệ  thống  file:  file nào đã bị  thay đổi  lúc
+download và upload file một cách bình thường. Điểm đặt biệt của SVN là nó
+lưu lại tất cả những gì thay đổi trên hệ thống file:  file nào đã bị thay đổi lúc
 nào, thay đổi như thế nào, và ai đã thay đổi nó. SVN cũng cho phép recover lại
-những version cũ một  cách chính xác. Các chức năng này giúp cho việc  làm
+những version cũ một  cách chính xác. Các chức năng này giúp cho việc làm
 việc nhóm trở nên trơn tru và an toàn hơn rất nhiều. 

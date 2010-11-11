@@ -1,6 +1,0 @@
-E:\Temp for QLNK 2\Test\Wpf_Linq\DataLayer\bin\Debug\DataLayer.dll
-E:\Temp for QLNK 2\Test\Wpf_Linq\DataLayer\bin\Debug\DataLayer.pdb
-E:\Temp for QLNK 2\Test\Wpf_Linq\DataLayer\obj\Debug\ResolveAssemblyReference.cache
-E:\Temp for QLNK 2\Test\Wpf_Linq\DataLayer\obj\Debug\DataLayer.dll
-E:\Temp for QLNK 2\Test\Wpf_Linq\DataLayer\obj\Debug\DataLayer.pdb
-E:\Temp for QLNK 2\Test\Wpf_Linq\DataLayer\bin\Debug\DataLayer.dll.config

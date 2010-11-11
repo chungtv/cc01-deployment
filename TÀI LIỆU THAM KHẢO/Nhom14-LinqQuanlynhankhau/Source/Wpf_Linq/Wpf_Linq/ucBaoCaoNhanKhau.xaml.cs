@@ -1,0 +1,226 @@
+﻿using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.ComponentModel;
+using System.Linq;
+using DataLayer;
+using System.Windows.Threading;
+using Wpf_Linq.Reports;
+using System;
+using System.Data;
+using System.Collections.Generic;
+
+namespace Wpf_Linq
+{
+    /// <summary>
+    /// Interaction logic for ucBaoCaoNhanKhau.xaml
+    /// </summary>
+    public partial class ucBaoCaoNhanKhau : UserControl
+    {
+        ObservableCollection<clsHoKhauTemp> HoKhaus;
+        string strTim;
+
+        public ucBaoCaoNhanKhau()
+        {
+            InitializeComponent();
+        }
+
+        private void btnXem_Click(object sender, RoutedEventArgs e)
+        {
+            Progress pg = new Progress();
+            pg.Title = "Đang tải dữ liệu ... (^_^)";
+            pg.IsBusy = true;
+            Grid.SetRowSpan(pg, 2);
+            myGridBaoCaoNhanKhau_2.Children.Add(pg);
+
+            strTim = txtChuoi.Text;
+            btnInChiTietBaoCaoNhanKhau.IsEnabled = false;
+
+            BackgroundWorker loadWorker = new BackgroundWorker();
+            loadWorker.DoWork += new DoWorkEventHandler(loadWorker_DoWork);
+            loadWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadWorker_RunWorkerCompleted);
+            loadWorker.RunWorkerAsync();
+        }
+        void loadWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (strTim == string.Empty)
+            {
+                return;
+            }
+            HokhauDataContext hKDataContext = new HokhauDataContext(windowMain.connectionString);
+            var query = from hk in hKDataContext.HOKHAUs
+                        where hk.SOHK.Contains(strTim)       //  << Query does
+                        select new clsHoKhauTemp            //  << not execute
+                        {                                   //  << here
+                            SoHoKhau = hk.SOHK,
+                            SoNha = hk.SONHA,
+                            TenDuong = hk.DUONG,
+                            PhuongXa = hk.PHUONGXA,
+                            QuanHuyen = hk.QUANHUYEN,
+                            TinhTP = hk.TINHTP,
+                            TinhTrang = hk.TINHTRANG1.LOAITT,
+                            ChiTiet = from ct in hKDataContext.CTHOKHAUs
+                                      where ct.SOHK == hk.SOHK
+                                      select new clsChiTietHoKhauTemp
+                                      {
+                                          Ho = ct.HO,
+                                          ChuLot = ct.CHULOT,
+                                          Ten = ct.TEN,
+                                          QHVoiChuHo = ct.QUANHE.QUANHE1,
+                                          NgaySinh = ct.NGAYSINH,
+                                          BiDanh = ct.BIDANH,
+                                          ToDanPho = ct.TODANPHO,
+                                          NoiSinh = ct.NOISINH,
+                                          NguyenQuan = ct.NGUYENQUAN,
+                                          GioiTinh = ct.GIOITINH == true ? "Nam" : "Nữ",
+                                          DanToc = ct.DANTOC,
+                                          TonGiao = ct.TONGIAO,
+                                          NgheNghiep = ct.NGHENGHIEP,
+                                          NoiLamViec = ct.NOILAMVIEC,
+                                          CMND = ct.CMND,
+                                          NgayCapCMND = ct.NGAYCAP_CMND,
+                                          NoiCapCMND = ct.NOICAP_CMND,
+                                          NgayDangKyThuongTru = ct.NTNDKTT,
+                                          NoiThuongTruTruocKhiChuyenDen = ct.NTTTKCD,
+                                          NgayChuyenDen = ct.NGAYCHUYENDEN,
+                                          LyDo = ct.LYDO,
+                                          GhiChu = ct.GHICHU
+                                      }
+                        };
+            try
+            {
+                HoKhaus = new ObservableCollection<clsHoKhauTemp>(query);
+            }
+            catch
+            {
+                MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate()
+            {
+                dataGridHoKhau.ItemsSource = HoKhaus;
+                dataGridHoKhau.SelectedIndex = 0;
+            }));
+        }
+        void loadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            myGridBaoCaoNhanKhau_2.Children.RemoveAt(2);
+            if (HoKhaus == null || HoKhaus.Count == 0)
+                return;
+            btnInChiTietBaoCaoNhanKhau.IsEnabled = true;
+        }
+
+        private void btnInChiTietBaoCaoNhanKhau_Click(object sender, RoutedEventArgs e)
+        {
+            Progress pg = new Progress();
+            pg.Title = "Đang xử lý ... (^_^)";
+            pg.IsBusy = true;
+            myGridBaoCaoNhanKhau.Children.Add(pg);
+
+            BackgroundWorker loadWorker = new BackgroundWorker();
+            loadWorker.DoWork += new DoWorkEventHandler(loadWorker_DoWork_Main);
+            loadWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadWorker_RunWorkerCompleted_Main);
+            loadWorker.RunWorkerAsync();
+        }
+
+        void loadWorker_DoWork_Main(object sender, DoWorkEventArgs e)
+        {
+            DataTable t = new DataTable();
+            t.Columns.Add("SOHK", Type.GetType("System.String"));
+            t.Columns.Add("HO", Type.GetType("System.String"));
+            t.Columns.Add("CHULOT", Type.GetType("System.String"));
+            t.Columns.Add("TEN", Type.GetType("System.String"));
+            t.Columns.Add("QH", Type.GetType("System.String"));
+            t.Columns.Add("NGS", Type.GetType("System.String"));
+            t.Columns.Add("BIDANH", Type.GetType("System.String"));
+            t.Columns.Add("TDP", Type.GetType("System.Int32"));
+            t.Columns.Add("NS", Type.GetType("System.String"));
+            t.Columns.Add("NQ", Type.GetType("System.String"));
+            t.Columns.Add("SEX", Type.GetType("System.String"));
+            t.Columns.Add("DT", Type.GetType("System.String"));
+            t.Columns.Add("TG", Type.GetType("System.String"));
+            t.Columns.Add("NN", Type.GetType("System.String"));
+            t.Columns.Add("NLV", Type.GetType("System.String"));
+            t.Columns.Add("CMND", Type.GetType("System.String"));
+            t.Columns.Add("NGAYCAP_CMND", Type.GetType("System.String"));
+            t.Columns.Add("NOICAP_CMND", Type.GetType("System.String"));
+            t.Columns.Add("NTNDKTT", Type.GetType("System.String"));
+            t.Columns.Add("NTTTKCD", Type.GetType("System.String"));
+            t.Columns.Add("NGAYCDEN", Type.GetType("System.String"));
+            t.Columns.Add("LYDO", Type.GetType("System.String"));
+            t.Columns.Add("GHICHU", Type.GetType("System.String"));
+
+            DataRow r;
+            List<clsChiTietHoKhauTemp> ChiTiet;
+            for (int i = 0; i < HoKhaus.Count; i++)
+            {
+                ChiTiet = HoKhaus[i].ChiTiet.ToList();
+                for (int index = 0; index < ChiTiet.Count; index++)
+                {
+                    r = t.NewRow();
+                    r["SOHK"] = HoKhaus[i].SoHoKhau;
+                    r["HO"] = ChiTiet[index].Ho;
+                    r["CHULOT"] = ChiTiet[index].ChuLot;
+                    r["TEN"] = ChiTiet[index].Ten;
+                    r["QH"] = ChiTiet[index].QHVoiChuHo;
+                    r["NGS"] = ChiTiet[index].NgaySinh;
+                    r["BIDANH"] = ChiTiet[index].BiDanh;
+                    r["TDP"] = ChiTiet[index].ToDanPho;
+                    r["NS"] = ChiTiet[index].NoiSinh;
+                    r["NQ"] = ChiTiet[index].NguyenQuan;
+                    r["SEX"] = ChiTiet[index].GioiTinh;
+                    r["DT"] = ChiTiet[index].DanToc;
+                    r["TG"] = ChiTiet[index].TonGiao;
+                    r["NN"] = ChiTiet[index].NgheNghiep;
+                    r["NLV"] = ChiTiet[index].NoiLamViec;
+                    r["CMND"] = ChiTiet[index].CMND;
+                    if (ChiTiet[index].NgayCapCMND.HasValue)
+                    {
+                        r["NGAYCAP_CMND"] = ChiTiet[index].NgayCapCMND.Value.ToShortDateString();
+                    }
+                    else
+                        r["NGAYCAP_CMND"] = "";
+                    r["NOICAP_CMND"] = ChiTiet[index].NoiCapCMND;
+                    if (ChiTiet[index].NgayDangKyThuongTru.HasValue)
+                    {
+                        r["NTNDKTT"] = ChiTiet[index].NgayDangKyThuongTru.Value.ToShortDateString();
+                    }
+                    else
+                        r["NTNDKTT"] = "";
+                    r["NTTTKCD"] = ChiTiet[index].NoiThuongTruTruocKhiChuyenDen;
+                    if (ChiTiet[index].NgayChuyenDen.HasValue)
+                    {
+                        r["NGAYCDEN"] = ChiTiet[index].NgayChuyenDen.Value.ToShortDateString();
+                    }
+                    else
+                        r["NGAYCDEN"] = "";
+                    r["LYDO"] = ChiTiet[index].LyDo;
+                    r["GHICHU"] = ChiTiet[index].GhiChu;
+
+                    t.Rows.Add(r);
+                }
+            }
+
+            CryReDSNKTheoHK objRpt = new CryReDSNKTheoHK();
+            objRpt.SetDataSource(t);
+            Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate()
+            {
+                windowReportView reportviewer = new windowReportView();
+                reportviewer.rptViewer.ReportSource = objRpt;
+                reportviewer.rptViewer.Refresh();
+                reportviewer.Show();
+            }));
+        }
+        void loadWorker_RunWorkerCompleted_Main(object sender, RunWorkerCompletedEventArgs e)
+        {
+            myGridBaoCaoNhanKhau.Children.RemoveAt(1);
+        }
+
+        private void dataGridHoKhau_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int index = dataGridHoKhau.SelectedIndex;
+            if (index != -1)
+                dataGridNhanKhau.ItemsSource = HoKhaus[index].ChiTiet;
+        }
+    }
+}

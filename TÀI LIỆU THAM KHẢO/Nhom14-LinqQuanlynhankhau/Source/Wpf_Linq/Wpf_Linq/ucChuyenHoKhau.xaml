@@ -1,0 +1,292 @@
+﻿<UserControl x:Class="Wpf_Linq.ucChuyenHoKhau"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:l2="clr-namespace:Wpf_Linq"
+             xmlns:my="clr-namespace:DataLayer;assembly=DataLayer"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <CollectionViewSource x:Key="hOKHAUViewSource"/>
+            <CollectionViewSource x:Key="chuyenHOKHAUViewSource"/>
+            <l2:PlusOneConverter x:Key="plusConverter"/>
+            <l2:DiaChiConverter x:Key="diaChiConverter"/>
+            <l2:DiaChiConverter_3 x:Key="diaChiConverter_3"/>
+            <l2:DateConverter x:Key="dateConverter"/>
+            <DataTemplate x:Key="EmpKey">
+                <Grid ShowGridLines="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="0,0,8,0" 
+                               Text="{Binding SoHoKhau}"/>
+                    <TextBlock Grid.Column="1" Margin="8,0,0,0" 
+                               Text="{Binding Path=.,
+                               Converter={StaticResource diaChiConverter}}"/>
+                </Grid>
+            </DataTemplate>
+            <Style x:Key="myStyle" TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Foreground" Value="DeepSkyBlue" />
+            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\DataGrid.Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="5" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="Thông Tin" FontSize="13">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" Foreground="Red" HorizontalAlignment="Stretch" />
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <Grid DataContext="{StaticResource hOKHAUViewSource}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Center">Hộ khẩu chuyển đi</Label>
+                    <ComboBox Grid.Column="1" Height="35"
+                        VerticalContentAlignment="Center"
+                        ItemsSource="{Binding}"
+                        ItemTemplate="{StaticResource EmpKey}"
+                        SelectionChanged="ComboBox_SelectionChanged"
+                        />
+                </Grid>
+                <Grid Grid.Column="1" Grid.RowSpan="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button IsEnabled="False" Margin="5" Name="btnChuyen" Height="70" Click="btnChuyen_Click">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="Images/move.png" Height="30"></Image>
+                            <TextBlock FontSize="18" VerticalAlignment="Center">Chuyển hộ khẩu</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="1" Margin="5" Name="btnLoadData" Height="70" Click="btnLoadData_Click">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="Images/refresh.png" Height="30"></Image>
+                            <TextBlock FontSize="18" VerticalAlignment="Center" >Load data</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" DataContext="{StaticResource hOKHAUViewSource}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Center">Hộ khẩu chuyển đến</Label>
+                    <ComboBox Grid.Column="1" Height="35"
+                        VerticalContentAlignment="Center"
+                        ItemsSource="{Binding}"
+                        Name="cboHoChuyenDen"
+                        IsSynchronizedWithCurrentItem="False"
+                        ItemTemplate="{StaticResource EmpKey}"
+                        />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="55"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top"
+                       Foreground="Red" Margin="0,10,35,0"
+                       Content="*"/>
+                        <Label Margin="0,10,0,0"
+                               HorizontalAlignment="Right" VerticalAlignment="Top">
+                            Lý do
+                        </Label>
+                        <TextBox Margin="0,10,0,10" Name="txtLyDo" Grid.Column="1"
+                                 VerticalContentAlignment="Top" IsEnabled="False"
+                                 Foreground="DeepSkyBlue"
+                                 TextWrapping="Wrap"/>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Foreground="Red" Margin="0,0,90,0"
+                       Content="*"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Foreground="Red" Margin="0,0,78,0"
+                       Content="*" Grid.Row="1"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Center">Người ký hồ sơ</Label>
+                        <Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">Ngày chuyển</Label>
+                        <TextBox Name="txtNguoiKyHoSo" Grid.Column="1" Style="{StaticResource myStyle}" Height="30"/>
+                        <DatePicker Name="dpNgayChuyen"
+                                    Grid.Column="1" Grid.Row="1" IsEnabled="False" Height="30"
+                                    VerticalContentAlignment="Center"
+                                    SelectedDateFormat="Short"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="1" Name="myGridHoKhau">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition/>
+                <RowDefinition Height="35"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+        <Grid Background="BlanchedAlmond">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label FontSize="15" HorizontalAlignment="Left" Background="Bisque" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="10,0,0,0">Danh sách hộ khẩu</Label>
+            <Border Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <Button Height="30" Margin="2,0" Name="btnFirst" Click="btnFirst_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/First.png" />
+                    </Button>
+                    <Button Height="30" Margin="2,0" Name="btnBack" Click="btnBack_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/Back.png" />
+                    </Button>
+                    <Rectangle Fill="Gray" Height="30" Width="1" Margin="2,0" />
+                    <TextBox Height="30" Width="50" Margin="2,0" IsEnabled="False" 
+                             Name="txtCurrentIndex" FontSize="20"
+                             HorizontalContentAlignment="Right" VerticalContentAlignment="Center" 
+                             Text="{Binding Path=SelectedIndex, ElementName=dataGridHoKhau,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource plusConverter}}"
+                             TextChanged="txtCurrentIndex_TextChanged"
+                             />
+                    <TextBlock Foreground="Black" Width="50" Text="/0" Name="txtItemCount" Margin="2,0" VerticalAlignment="Center" FontSize="20"/>
+                    <Rectangle Fill="Gray" Height="30" Width="1" Margin="2,0"/>
+                    <Button Height="30" Margin="2,0" Name="btnForward" Click="btnForward_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/Forward.png" />
+                    </Button>
+                    <Button Height="30" Margin="2,0" Name="btnLast" Click="btnLast_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/Last.png" />
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1" DataContext="{StaticResource hOKHAUViewSource}">
+            <DataGrid FontSize="13" Name="dataGridHoKhau"
+                        ItemsSource="{Binding}"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserResizeRows="False" AutoGenerateColumns="False"
+                        RowHeaderWidth="25" IsReadOnly="True"
+                        SelectionMode="Single">
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <DataGrid Style="{StaticResource PrettierDataGridStyle}"
+                                  AutoGenerateColumns="False" 
+                                  FontSize="9"
+                                  CanUserAddRows="False"
+                                  RowHeaderWidth="0" IsReadOnly="True"
+                                  CanUserDeleteRows="False"
+                                  Margin="20,0,0,0"
+                                  ItemsSource="{Binding ChiTiet}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Họ" Binding="{Binding Path=Ho}"/>
+                                <DataGridTextColumn Header="Chữ lót" Binding="{Binding Path=ChuLot}"/>
+                                <DataGridTextColumn Header="Tên" Binding="{Binding Path=Ten}"/>
+                                <DataGridTextColumn Header="QH với chủ hộ" Binding="{Binding Path=QHVoiChuHo}"/>
+                                <DataGridTextColumn Header="Ngày sinh" Binding="{Binding Path=NgaySinh}"/>
+                                <DataGridTextColumn Header="Giới tính" Binding="{Binding Path=GioiTinh}"/>
+                                <DataGridTextColumn Header="Dân tộc" Binding="{Binding Path=DanToc}"/>
+                                <DataGridTextColumn Header="Tôn giáo" Binding="{Binding Path=TonGiao}"/>
+                                <DataGridTextColumn Header="CMND" Binding="{Binding Path=CMND}"/>
+                                <DataGridTextColumn Header="Nghề nghiệp" Binding="{Binding Path=NgheNghiep}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Số hộ khẩu" Binding="{Binding Path=SoHoKhau}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Số nhà" Binding="{Binding Path=SoNha}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Tên đường" Binding="{Binding Path=TenDuong}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Phường xã" Binding="{Binding Path=PhuongXa}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Quận huyện" Binding="{Binding Path=QuanHuyen}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Tỉnh TP" Binding="{Binding Path=TinhTP}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="2"  Background="BlanchedAlmond">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label FontSize="15" HorizontalAlignment="Left" Background="Bisque" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="10,0,0,0">Danh sách hộ khẩu đã chuyển</Label>
+            <Border Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <Button Height="30" Margin="2,0" Name="btnFirst_2" Click="btnFirst_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/First.png" />
+                    </Button>
+                    <Button Height="30" Margin="2,0" Name="btnBack_2" Click="btnBack_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/Back.png" />
+                    </Button>
+                    <Rectangle Fill="Gray" Height="30" Width="1" Margin="2,0" />
+                    <TextBox Height="30" Width="50" Margin="2,0" IsEnabled="False" 
+                             Name="txtCurrentIndexChuyen" FontSize="20"
+                             HorizontalContentAlignment="Right" VerticalContentAlignment="Center" 
+                             Text="{Binding Path=SelectedIndex, ElementName=dataGridHoKhauChuyen,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource plusConverter}}"
+                             TextChanged="txtCurrentIndexChuyen_TextChanged"
+                             />
+                    <TextBlock Foreground="Black" Width="50" Text="/0" Name="txtItemCount2" Margin="2,0" VerticalAlignment="Center" FontSize="20"/>
+                    <Rectangle Fill="Gray" Height="30" Width="1" Margin="2,0"/>
+                    <Button Height="30" Margin="2,0" Name="btnForward_2" Click="btnForward_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/Forward.png" />
+                    </Button>
+                    <Button Height="30" Margin="2,0" Name="btnLast_2" Click="btnLast_Click" IsEnabled="False">
+                        <Image Height="16" Source="Images/Last.png" />
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="3" DataContext="{StaticResource chuyenHOKHAUViewSource}">
+            <DataGrid FontSize="13" Name="dataGridHoKhauChuyen"
+                        ItemsSource="{Binding}"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserResizeRows="False" AutoGenerateColumns="False"
+                        RowHeaderWidth="0" IsReadOnly="True"
+                        SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Số HK chuyển đi" Binding="{Binding Path=SOHK}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Path=.,Converter={StaticResource diaChiConverter_3}}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Số HK chuyển đến" Binding="{Binding Path=SOHOSO}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Path=NOICHUYENDEN}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Họ tên người ký hồ sơ" Binding="{Binding Path=HOTENNGUOIKYHS}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Lý do chuyển" Binding="{Binding Path=LYDO}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Ngày chuyển" Binding="{Binding Path=NGAYCC,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

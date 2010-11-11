@@ -1,0 +1,337 @@
+﻿<UserControl x:Class="Wpf_Linq.ucTimKiemNhanKhau"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:UIControls"
+             xmlns:l2="clr-namespace:Wpf_Linq"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type RadioButton}">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Border x:Name="PART_border" Padding="3px,3px,3px,0" Margin="2px" Background="Azure"
+                                    BorderThickness="1" BorderBrush="{x:Static SystemColors.ControlDarkBrush}"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter x:Name="PART_content" HorizontalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="PART_content" Property="TextBlock.Foreground" Value="Azure"/>
+                                    <Setter TargetName="PART_border" Property="Background">
+                                        <Setter.Value>
+                                            <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,1" 
+                                                    RadiusX="0.5" RadiusY="0.5">
+                                                <GradientStop Color="MediumOrchid" Offset="0.5"/>
+                                                <GradientStop Color="BlueViolet" Offset="1"/>
+                                            </RadialGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="PART_content" Property="TextBlock.Foreground" Value="Azure"/>
+                                    <Setter TargetName="PART_border" Property="Background">
+                                        <Setter.Value>
+                                            <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,1" 
+                                                    RadiusX="0.5" RadiusY="0.5">
+                                                <GradientStop Color="MediumOrchid" Offset="0.5"/>
+                                                <GradientStop Color="BlueViolet" Offset="1"/>
+                                            </RadialGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <CollectionViewSource x:Key="thongTinNHANKHAUViewSource"/>
+            <CollectionViewSource x:Key="chuyenNHANKHAUViewSource"/>
+            <CollectionViewSource x:Key="catNHANKHAUViewSource"/>
+            <CollectionViewSource x:Key="doiTUONGVIPHAMViewSource"/>
+            <l2:HoTenConverter_2 x:Key="hoTenConverter_2"/>
+            <l2:HoTenConverter_3 x:Key="hoTenConverter_3"/>
+            <l2:HoTenConverter_4 x:Key="hoTenConverter_4"/>
+            <l2:HoTenConverter_5 x:Key="hoTenConverter_5"/>
+            <l2:PlusOneConverter x:Key="plusConverter"/>
+            <l2:GioiTinhConverter x:Key="gioiTinhConverter"/>
+            <l2:DateConverter x:Key="dateConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\DataGrid.Generic.xaml"/>
+                <ResourceDictionary Source="Themes\SearchTextBox.Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Name="myGridTimKiemNhanKhau">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="90"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="1" FontSize="15">
+                    <GroupBox.Header>
+                        <TextBlock Foreground="Red">Tìm kiếm</TextBlock>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <RadioButton Name="rbnTimTatCa_2" VerticalAlignment="Bottom" GroupName="rbnTimKiem_4" IsChecked="True">Tất cả</RadioButton>
+                        <RadioButton Name="rbnTimHoTen" Grid.Column="1" VerticalAlignment="Bottom" GroupName="rbnTimKiem_4">Họ tên</RadioButton>
+                        <RadioButton Name="rbnTimCMND" Grid.Column="2" VerticalAlignment="Bottom" GroupName="rbnTimKiem_4">CMND</RadioButton>
+                        <RadioButton Name="rbnTimChuHo" Grid.Column="3" VerticalAlignment="Bottom" GroupName="rbnTimKiem_4">Chủ hộ</RadioButton>
+                        <l:SearchTextBox Grid.ColumnSpan="5" Grid.Row="1" x:Name="txtTimKiem"
+                                             VerticalContentAlignment="Center"
+                                             FontSize="18"
+                                             LabelText="Nhập từ cần tìm"
+                                             Search="timKiem"
+                                             SearchMode="Delayed"
+                                             PreviewTextInput="txtTimKiem_PreviewTextInput"
+                                             Text="Tìm tất cả"
+                                             />
+                    </Grid>
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Row="2" Background="Azure">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="180"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton Name="rbnThongTinNhanKhau" FontSize="17" VerticalAlignment="Bottom" GroupName="rbnTimKiem_6" IsChecked="True">Thông tin nhân khẩu</RadioButton>
+                <RadioButton Name="rbnChuyenNhanKhau" FontSize="17" Grid.Column="1" VerticalAlignment="Bottom" GroupName="rbnTimKiem_6">Chuyển nhân khẩu</RadioButton>
+                <RadioButton Name="rbnCatNhanKhau" FontSize="17" Grid.Column="2" VerticalAlignment="Bottom" GroupName="rbnTimKiem_6">Cắt nhân khẩu</RadioButton>
+                <RadioButton Name="rbnDoiTuongViPham" FontSize="17" Grid.Column="3" VerticalAlignment="Bottom" GroupName="rbnTimKiem_6">Đối tượng vi phạm</RadioButton>
+            </Grid>
+            <Grid Grid.Row="3"  Background="BlanchedAlmond">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Name="lbl" FontSize="18" Width="200" Height="35" HorizontalAlignment="Left" Background="Bisque" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="10,0,0,0">Danh sách nhân khẩu</Label>
+                <Button Grid.Column="2" HorizontalAlignment="Right"
+                    Name="btnInChiTiet" HorizontalContentAlignment="Left"
+                    Click="btnInChiTiet_Click"
+                    IsEnabled="False" Margin="0,0,20,0"
+                    Height="30" Width="150">
+                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
+                        <Image Source="Images/print.png" Height="20"></Image>
+                        <TextBlock FontSize="18" Margin="5,0,0,0" VerticalAlignment="Center">In Chi Tiết</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Border Grid.Column="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Height="30" Margin="2,0" Name="btnFirst" Click="btnFirst_Click" IsEnabled="False">
+                            <Image Height="16" Source="Images/First.png" />
+                        </Button>
+                        <Button Height="30" Margin="2,0" Name="btnBack" Click="btnBack_Click" IsEnabled="False">
+                            <Image Height="16" Source="Images/Back.png" />
+                        </Button>
+                        <Rectangle Fill="Gray" Height="30" Width="1" Margin="2,0" />
+                        <Grid>
+                            <TextBox Height="30" Width="50" Margin="2,0" IsEnabled="False" 
+                             Name="txtCurrentIndexThongTinNhanKhau" FontSize="20"
+                             HorizontalContentAlignment="Right" VerticalContentAlignment="Center" 
+                             Text="{Binding Path=SelectedIndex, ElementName=dataGridThongTinNhanKhau,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource plusConverter}}"
+                             TextChanged="txtCurrentIndexThongTinNhanKhau_TextChanged"
+                             />
+                            <TextBox Height="30" Width="50" Margin="2,0" IsEnabled="False" 
+                             Name="txtCurrentIndexChuyenNhanKhau" FontSize="20"
+                             HorizontalContentAlignment="Right" VerticalContentAlignment="Center" 
+                             Text="{Binding Path=SelectedIndex, ElementName=dataGridChuyenNhanKhau,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource plusConverter}}"
+                             TextChanged="txtCurrentIndexChuyenNhanKhau_TextChanged"
+                             Visibility="Hidden"
+                             />
+                            <TextBox Height="30" Width="50" Margin="2,0" IsEnabled="False" 
+                             Name="txtCurrentIndexCatNhanKhau" FontSize="20"
+                             HorizontalContentAlignment="Right" VerticalContentAlignment="Center" 
+                             Text="{Binding Path=SelectedIndex, ElementName=dataGridCatNhanKhau,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource plusConverter}}"
+                             TextChanged="txtCurrentIndexDoiTuongViPham_TextChanged"
+                             Visibility="Hidden"
+                             />
+                            <TextBox Height="30" Width="50" Margin="2,0" IsEnabled="False" 
+                             Name="txtCurrentIndexDoiTuongViPham" FontSize="20"
+                             HorizontalContentAlignment="Right" VerticalContentAlignment="Center" 
+                             Text="{Binding Path=SelectedIndex, ElementName=dataGridDoiTuongViPham,
+                                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                                    Converter={StaticResource plusConverter}}"
+                             TextChanged="txtCurrentIndexCatNhanKhau_TextChanged"
+                             Visibility="Hidden"
+                             />
+                        </Grid>
+                        <TextBlock Foreground="Black" Width="50" Text="/0" Name="txtItemCount" Margin="2,0" VerticalAlignment="Center" FontSize="20"/>
+                        <Rectangle Fill="Gray" Height="30" Width="1" Margin="2,0"/>
+                        <Button Height="30" Margin="2,0" Name="btnForward" Click="btnForward_Click" IsEnabled="False">
+                            <Image Height="16" Source="Images/Forward.png" />
+                        </Button>
+                        <Button Height="30" Margin="2,0" Name="btnLast" Click="btnLast_Click" IsEnabled="False">
+                            <Image Height="16" Source="Images/Last.png" />
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="4" Name="myGrid_11">
+                <Grid Name="myGrid_4" DataContext="{StaticResource thongTinNHANKHAUViewSource}">
+                    <DataGrid FontSize="13" Name="dataGridThongTinNhanKhau"
+                        ItemsSource="{Binding}"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserResizeRows="False" AutoGenerateColumns="False"
+                        RowHeaderWidth="0" IsReadOnly="True"
+                        SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Số hộ khẩu" Binding="{Binding Path=SOHK}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Họ tên" Binding="{Binding Path=.,Converter={StaticResource hoTenConverter_2}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="QH với chủ hộ" Binding="{Binding Path=QUANHE.QUANHE1}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày sinh" Binding="{Binding Path=NGAYSINH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Bí danh" Binding="{Binding Path=BIDANH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tổ dân phố" Binding="{Binding Path=TODANPHO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi sinh" Binding="{Binding Path=NOISINH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nguyên quán" Binding="{Binding Path=NGUYENQUAN}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Giới tính" Binding="{Binding Path=GIOITINH,Converter={StaticResource gioiTinhConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Dân tộc" Binding="{Binding Path=DANTOC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tôn giáo" Binding="{Binding Path=TONGIAO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nghề nghiệp" Binding="{Binding Path=NGHENGHIEP}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi làm việc" Binding="{Binding Path=NOILAMVIEC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="CMND" Binding="{Binding Path=CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày cấp CMND" Binding="{Binding Path=NGAYCAP_CMND,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi cấp CMND" Binding="{Binding Path=NOICAP_CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày DK TT" Binding="{Binding Path=NTNDKTT,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi TT trước khi chuyển đến" Binding="{Binding Path=NTTTKCD}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày chuyển đến" Binding="{Binding Path=NGAYCHUYENDEN,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Lý do" Binding="{Binding Path=LYDO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ghi chú" Binding="{Binding Path=GHICHU}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Name="myGrid_5" DataContext="{StaticResource chuyenNHANKHAUViewSource}" Visibility="Hidden">
+                    <DataGrid FontSize="13" Name="dataGridChuyenNhanKhau"
+                        ItemsSource="{Binding}"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserResizeRows="False" AutoGenerateColumns="False"
+                        RowHeaderWidth="0" IsReadOnly="True"
+                        SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Số HK chuyển đi" Binding="{Binding Path=SoHoKhau}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Địa chỉ đi" Binding="{Binding Path=DC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Số HK chuyển đến" Binding="{Binding Path=SoHoSo}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Địa chỉ đến" Binding="{Binding Path=NoiChuyenDen}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Họ tên" Binding="{Binding Path=.,Converter={StaticResource hoTenConverter_3}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="QH với chủ hộ" Binding="{Binding Path=QHVoiChuHo}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày sinh" Binding="{Binding Path=NgaySinh}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Bí danh" Binding="{Binding Path=BiDanh}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tổ dân phố" Binding="{Binding Path=ToDanPho}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi sinh" Binding="{Binding Path=NoiSinh}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nguyên quán" Binding="{Binding Path=NguyenQuan}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Giới tính" Binding="{Binding Path=GioiTinh}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Dân tộc" Binding="{Binding Path=DanToc}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tôn giáo" Binding="{Binding Path=TonGiao}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nghề nghiệp" Binding="{Binding Path=NgheNghiep}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi làm việc" Binding="{Binding Path=NoiLamViec}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="CMND" Binding="{Binding Path=CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày cấp CMND" Binding="{Binding Path=NgayCapCMND,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi cấp CMND" Binding="{Binding Path=NoiCapCMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày DK TT" Binding="{Binding Path=NgayDangKyThuongTru,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày chuyển đi" Binding="{Binding Path=NgayChuyenDi,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Lý do" Binding="{Binding Path=LyDoChuyen}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ghi chú" Binding="{Binding Path=GhiChu}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Name="myGrid_6" DataContext="{StaticResource catNHANKHAUViewSource}" Visibility="Hidden">
+                    <DataGrid FontSize="13" Name="dataGridCatNhanKhau"
+                        ItemsSource="{Binding}"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserResizeRows="False" AutoGenerateColumns="False"
+                        RowHeaderWidth="0" IsReadOnly="True"
+                        SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Số hộ khẩu" Binding="{Binding Path=SOHK}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Họ tên" Binding="{Binding Path=.,Converter={StaticResource hoTenConverter_4}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="QH với chủ hộ" Binding="{Binding Path=QHVOICHUHO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày sinh" Binding="{Binding Path=NGAYSINH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Bí danh" Binding="{Binding Path=BIDANH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tổ dân phố" Binding="{Binding Path=TODANPHO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi sinh" Binding="{Binding Path=NOISINH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nguyên quán" Binding="{Binding Path=NGUYENQUAN}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Giới tính" Binding="{Binding Path=GIOITINH,Converter={StaticResource gioiTinhConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Dân tộc" Binding="{Binding Path=DANTOC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tôn giáo" Binding="{Binding Path=TONGIAO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nghề nghiệp" Binding="{Binding Path=NGHENGHIEP}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi làm việc" Binding="{Binding Path=NOILAMVIEC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="CMND" Binding="{Binding Path=CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày cấp CMND" Binding="{Binding Path=NGAYCAP_CMND,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi cấp CMND" Binding="{Binding Path=NOICAP_CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày DK TT" Binding="{Binding Path=NTNDKTT,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày chuyển đi" Binding="{Binding Path=NGAYCHUYENDI,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Lý do" Binding="{Binding Path=LYDOCHUYEN}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ghi chú" Binding="{Binding Path=GHICHU}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Name="myGrid_7" DataContext="{StaticResource doiTUONGVIPHAMViewSource}" Visibility="Hidden">
+                    <DataGrid FontSize="13" Name="dataGridDoiTuongViPham"
+                        ItemsSource="{Binding}"
+                        CanUserAddRows="False" CanUserDeleteRows="False"
+                        CanUserResizeRows="False" AutoGenerateColumns="False"
+                        RowHeaderWidth="0" IsReadOnly="True"
+                        SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã ĐT" Binding="{Binding Path=MADOITUONG}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Số HK" Binding="{Binding Path=SOHK}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Họ tên" Binding="{Binding Path=.,Converter={StaticResource hoTenConverter_5}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Loại ĐT" Binding="{Binding Path=LOAIDOITUONG.LOAIDT}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tình hình ĐT" Binding="{Binding Path=TINHHINHDT}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="QH với chủ hộ" Binding="{Binding Path=QHVOICHUHO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày sinh" Binding="{Binding Path=NGAYSINH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Bí danh" Binding="{Binding Path=BIDANH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tổ dân phố" Binding="{Binding Path=TODANPHO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi sinh" Binding="{Binding Path=NOISINH}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nguyên quán" Binding="{Binding Path=NGUYENQUAN}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Giới tính" Binding="{Binding Path=GIOITINH,Converter={StaticResource gioiTinhConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Dân tộc" Binding="{Binding Path=DANTOC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Tôn giáo" Binding="{Binding Path=TONGIAO}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nghề nghiệp" Binding="{Binding Path=NGHENGHIEP}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi làm việc" Binding="{Binding Path=NOILAMVIEC}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="CMND" Binding="{Binding Path=CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày cấp CMND" Binding="{Binding Path=NGAYCAP_CMND,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi cấp CMND" Binding="{Binding Path=NOICAP_CMND}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Nơi TT trước khi chuyển đến" Binding="{Binding Path=NTTTKCD}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày chuyển đến" Binding="{Binding Path=NGAYCHUYENDEN,Converter={StaticResource dateConverter}}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Lý do" Binding="{Binding Path=LYDO}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Wpf_Linq.Progress"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Wpf_Linq"
+    MinWidth="200"
+    MinHeight="150">
+    <UserControl.Resources>
+        <local:ShowIfTrueConverter x:Key="ShowIfTrueConverter"/>
+    </UserControl.Resources>
+    <UserControl.ContentTemplate>
+        <DataTemplate>
+            <Grid>
+                <!-- "Busy" Overlay -->
+                <Border x:Name="WaitBorder"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Visibility="{Binding RelativeSource={RelativeSource 
+                                                Mode=FindAncestor, 
+                                                AncestorType={x:Type local:Progress}}, 
+                                                Path=IsBusy,
+                                                Converter={StaticResource ShowIfTrueConverter}}"
+                        >
+                    <Border.Background>
+                        <SolidColorBrush Color="Azure" Opacity="0.8" />
+                    </Border.Background>
+                    <StackPanel
+                            HorizontalAlignment="Center"    
+                            VerticalAlignment="Center">
+                        <!--ProgressAnimation TYPE 1-->
+                        <!--
+                            <local:ProgressAnimation 
+                                x:Name="wCursor"
+                                IsAnimating="{Binding RelativeSource={RelativeSource 
+                                                Mode=FindAncestor, 
+                                                AncestorType={x:Type local:Progress}}, 
+                                                Path=IsBusy}"
+                              />-->
+                        <!--ProgressAnimation TYPE 2-->
+                        <local:LoadingAnimation HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock FontSize="12" FontWeight="Bold" Foreground="#001A41" Text="{Binding RelativeSource={RelativeSource 
+                                                Mode=FindAncestor, 
+                                                AncestorType={x:Type local:Progress}}, 
+                                                Path=Title}" Margin="0,10,0,0">
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </UserControl.ContentTemplate>
+</UserControl>

@@ -1,4 +1,0 @@
-#labels Phase-Support,Phase-QA
-Hiểu hơn về những đoạn code các chức năng
-Chủ yếu là báo cáo thống kê, tìm kiếm... sử dụng các câu truy vấn LINQ mình đã đưa tài liệu ở phần download
-Còn giao diện được thiết kế bằng WPF

@@ -1,0 +1,130 @@
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using DataLayer;
+using System.ComponentModel;
+using System.Windows.Threading;
+using System;
+using System.Data;
+using Wpf_Linq.Reports;
+
+namespace Wpf_Linq
+{
+    /// <summary>
+    /// Interaction logic for ucBaoCaoHoKhau.xaml
+    /// </summary>
+    public partial class ucBaoCaoHoKhau : UserControl
+    {
+        ObservableCollection<clsHoKhauTemp> HoKhaus;
+        string strTim;
+
+        public ucBaoCaoHoKhau()
+        {
+            InitializeComponent();
+        }
+
+        private void btnXem_Click(object sender, RoutedEventArgs e)
+        {
+            Progress pg = new Progress();
+            pg.Title = "Ðang t?i d? li?u ... (^_^)";
+            pg.IsBusy = true;
+            myGridBaoCaoNhanKhau.Children.Add(pg);
+
+            strTim = txtChuoi.Text;
+            btnInChiTietBaoCaoNhanKhau.IsEnabled = false;
+
+            BackgroundWorker loadWorker = new BackgroundWorker();
+            loadWorker.DoWork += new DoWorkEventHandler(loadWorker_DoWork);
+            loadWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadWorker_RunWorkerCompleted);
+            loadWorker.RunWorkerAsync();
+        }
+        void loadWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (strTim == string.Empty)
+            {
+                return;
+            }
+            HokhauDataContext hKDataContext = new HokhauDataContext(windowMain.connectionString);
+            var query = from hk in hKDataContext.HOKHAUs
+                        where hk.SOHK.Contains(strTim)       //  << Query does
+                        select new clsHoKhauTemp            //  << not execute
+                        {                                   //  << here
+                            SoHoKhau = hk.SOHK,
+                            SoNha = hk.SONHA,
+                            TenDuong = hk.DUONG,
+                            PhuongXa = hk.PHUONGXA,
+                            QuanHuyen = hk.QUANHUYEN,
+                            TinhTP = hk.TINHTP,
+                            TinhTrang = hk.TINHTRANG1.LOAITT,
+                            ChiTiet = null
+                        };
+            try
+            {
+                HoKhaus = new ObservableCollection<clsHoKhauTemp>(query);
+            }
+            catch
+            {
+                MessageBox.Show("Không tìm th?y máy ch? ! Vui lòng thay d?i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate()
+            {
+                dataGridHoKhau.ItemsSource = HoKhaus;
+            }));
+        }
+        void loadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            myGridBaoCaoNhanKhau.Children.RemoveAt(1);
+            if (HoKhaus == null || HoKhaus.Count ==0)
+                return;
+            btnInChiTietBaoCaoNhanKhau.IsEnabled = true;
+        }
+
+        private void btnInChiTietBaoCaoNhanKhau_Click(object sender, RoutedEventArgs e)
+        {
+            Progress pg = new Progress();
+            pg.Title = "Ðang x? lý ... (^_^)";
+            pg.IsBusy = true;
+            myGridBaoCaoHoKhau.Children.Add(pg);
+
+            BackgroundWorker loadWorker = new BackgroundWorker();
+            loadWorker.DoWork += new DoWorkEventHandler(loadWorker_DoWork_Main);
+            loadWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadWorker_RunWorkerCompleted_Main);
+            loadWorker.RunWorkerAsync();
+        }
+
+        void loadWorker_DoWork_Main(object sender, DoWorkEventArgs e)
+        {
+            DataTable t = new DataTable();
+            t.Columns.Add("SOHK", Type.GetType("System.String"));
+            t.Columns.Add("DC", Type.GetType("System.String"));
+            t.Columns.Add("TINHTRANG", Type.GetType("System.String"));
+
+            DataRow r;
+            for (int i = 0; i < HoKhaus.Count; i++)
+            {
+                r = t.NewRow();
+                r["SOHK"] = HoKhaus[i].SoHoKhau;
+                r["DC"] = HoKhaus[i].SoNha + " - " + HoKhaus[i].TenDuong + " - " + HoKhaus[i].PhuongXa + " - " + HoKhaus[i].QuanHuyen + " - " + HoKhaus[i].TinhTP;
+                r["TINHTRANG"] = HoKhaus[i].TinhTrang;
+
+                t.Rows.Add(r);
+            }
+
+            CryReDSHK objRpt = new CryReDSHK();
+            objRpt.SetDataSource(t);
+            Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate()
+            {
+            windowReportView reportviewer = new windowReportView();
+            reportviewer.rptViewer.ReportSource = objRpt;
+            reportviewer.rptViewer.Refresh();
+            reportviewer.Show();
+            }));
+        }
+        void loadWorker_RunWorkerCompleted_Main(object sender, RunWorkerCompletedEventArgs e)
+        {
+            myGridBaoCaoHoKhau.Children.RemoveAt(1);
+        }
+    }
+}

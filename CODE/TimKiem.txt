@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using System;
 using System.Data;
 using Wpf_Linq.Reports;
+using system.windows;
 
 namespace Wpf_Linq
 {

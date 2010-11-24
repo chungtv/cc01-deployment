@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -125,7 +125,7 @@ namespace Wpf_Linq
         private void btnInChiTiet_Click(object sender, RoutedEventArgs e)
         {
             Progress pg = new Progress();
-            pg.Title = "Đang xử lý ... (^_^)";
+            pg.Title = "?ang x? l� ... (^_^)";
             pg.IsBusy = true;
             myGridTimKiemHoKhau.Children.Add(pg);
 
@@ -258,7 +258,7 @@ namespace Wpf_Linq
         private void timKiem(object sender, RoutedEventArgs e)
         {
             Progress pg = new Progress();
-            pg.Title = "Đang tải dữ liệu ... (^_^)";
+            pg.Title = "?ang t?i d? li?u ... (^_^)";
             pg.IsBusy = true;
             myGrid.Children.Add(pg);
 
@@ -334,7 +334,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhaus.Count();
@@ -367,7 +367,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhaus.Count();
@@ -400,7 +400,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhaus.Count();
@@ -423,7 +423,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhausChuyen.Count();
@@ -447,7 +447,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhausChuyen.Count();
@@ -471,7 +471,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhausChuyen.Count();
@@ -494,7 +494,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhausCat.Count();
@@ -518,7 +518,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhausCat.Count();
@@ -542,7 +542,7 @@ namespace Wpf_Linq
                 }
                 catch
                 {
-                    MessageBox.Show("Không tìm thấy máy chủ ! Vui lòng thay đổi chuỗi kết nối ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Kh�ng t�m th?y m�y ch? ! Vui l�ng thay ??i chu?i k?t n?i ... T__T", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 countItems = HoKhausCat.Count();
@@ -630,7 +630,7 @@ namespace Wpf_Linq
                 btnInChiTiet.IsEnabled = false;
                 txtItemCount.Text = "/0";
                 enable_1(false);
-                enable_2(false);
+                enable_2(fals);
             }
             else
             {
@@ -642,7 +642,7 @@ namespace Wpf_Linq
         }
         #endregion
 
-        #region "Tìm tất cả"
+        #region "T�m t?t c?"
         private void txtTimKiem_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             if (rbnTimTatCa.IsChecked == true)
@@ -651,19 +651,19 @@ namespace Wpf_Linq
 
         private void rbnTimTatCa_Checked(object sender, RoutedEventArgs e)
         {
-            txtTimKiem.Text = "Tìm tất cả";
+            txtTimKiem.Text = "T�m t?t c?";
             txtTimKiem.Focus();
         }
 
         private void rbnTimSoHoKhau_Checked(object sender, RoutedEventArgs e)
         {
-            if (txtTimKiem.Text == "Tìm tất cả")
+            if (txtTimKiem.Text == "T�m t?t c?")
                 txtTimKiem.Text = string.Empty;
         }
 
         private void rbnTimDiaChi_Checked(object sender, RoutedEventArgs e)
         {
-            if (txtTimKiem.Text == "Tìm tất cả")
+            if (txtTimKiem.Text == "T�m t?t c?")
                 txtTimKiem.Text = string.Empty;
         }
         #endregion
@@ -780,3 +780,4 @@ namespace Wpf_Linq
         #endregion
     }
 }
+dsfdgfdgdfgdf
